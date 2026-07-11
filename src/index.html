@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tactical Scaling AI — Engineered Access, Not Outreach</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'bg-dark': '#0a0a0a',
+          'bg-card': '#111111',
+          'bg-elevated': '#1a1a1a',
+          teal: { DEFAULT: '#14B8A6' },
+          amber: { DEFAULT: '#ffa260' },
+          muted: '#a1a1aa',
+          faint: '#71717a',
+        },
+        fontFamily: {
+          satoshi: ['Satoshi', 'sans-serif'],
+          serif: ['"Instrument Serif"', 'serif'],
+        },
+        maxWidth: {
+          'container': '1400px',
+        },
+        transitionTimingFunction: {
+          'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  body { font-family: 'Satoshi', sans-serif; background-color: #0a0a0a; color: #a1a1aa; }
+
+  .accent {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #14B8A6;
+  }
+
+  .container-x { max-width: 1400px; margin-left: auto; margin-right: auto; padding-left: 1.5rem; padding-right: 1.5rem; }
+
+  /* reveal-on-scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s cubic-bezier(0.16,1,0.3,1), transform .8s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1.in-view { transition-delay: .08s; }
+  .reveal-delay-2.in-view { transition-delay: .16s; }
+  .reveal-delay-3.in-view { transition-delay: .24s; }
+  .reveal-delay-4.in-view { transition-delay: .32s; }
+
+  /* card orb glow */
+  .card-orb {
+    position: absolute; width: 200px; height: 200px; border-radius: 9999px;
+    filter: blur(64px); opacity: .28; top: -60px; right: -60px;
+    background: radial-gradient(circle, #14B8A6, transparent 70%);
+    pointer-events: none;
+  }
+  .card-orb-overlay {
+    position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(160deg, rgba(255,255,255,0.04), transparent 45%);
+  }
+
+  /* glow buttons */
+  .glow-btn { position: relative; overflow: hidden; isolation: isolate; }
+  .glow-orb {
+    position: absolute; inset: -40%; border-radius: inherit; z-index: -1;
+    background: radial-gradient(circle at 30% 30%, rgba(255,162,96,.55), transparent 60%);
+    opacity: 0; transition: opacity .5s ease;
+  }
+  .glow-btn:hover .glow-orb { opacity: 1; }
+
+  /* marquee */
+  .marquee-viewport { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .marquee-track { display: flex; width: max-content; animation: marquee 32s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* hero mountain */
+  .hero-sky {
+    background: linear-gradient(180deg, #050608 0%, #0a0a0a 32%, #1f130a 68%, #3a2410 100%);
+  }
+  .hero-glow {
+    background: radial-gradient(ellipse at center, rgba(255,162,96,0.38), transparent 70%);
+  }
+  .mtn-back {
+    background: #140d08;
+    clip-path: polygon(0% 100%, 0% 62%, 14% 42%, 28% 56%, 44% 22%, 58% 50%, 74% 30%, 88% 52%, 100% 38%, 100% 100%);
+  }
+  .mtn-front {
+    background: #0a0705;
+    clip-path: polygon(0% 100%, 0% 72%, 18% 48%, 36% 64%, 54% 28%, 70% 58%, 84% 36%, 100% 60%, 100% 100%);
+  }
+</style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+<!-- ========== NAV ========== -->
+<nav class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-bg-dark/70 border-b border-white/10">
+  <div class="container-x flex items-center justify-between h-20">
+    <a href="#hero" class="font-satoshi font-bold text-white text-lg tracking-tight">
+      Tactical Scaling <span class="accent text-xl">AI</span>
+    </a>
+    <a href="#cta" class="glow-btn inline-flex items-center gap-2 rounded-full bg-white text-black font-semibold text-sm px-5 py-2.5 hover:bg-white/90 transition">
+      <span class="glow-orb"></span>
+      <span>See if you qualify</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="relative min-h-[820px] md:min-h-[900px] overflow-hidden flex flex-col justify-end pt-32" id="hero">
+  <div class="absolute inset-0 hero-sky"></div>
+  <div class="absolute left-1/2 bottom-0 -translate-x-1/2 w-[140%] h-[440px] rounded-[50%] blur-3xl opacity-70 hero-glow"></div>
+  <div class="absolute inset-x-0 bottom-0 h-[55%] opacity-90 mtn-back"></div>
+  <div class="absolute inset-x-0 bottom-0 h-[38%] opacity-95 mtn-front"></div>
+  <div class="absolute inset-0" style="background: radial-gradient(ellipse at 50% 25%, transparent 30%, rgba(0,0,0,0.55) 100%);"></div>
+
+  <div class="relative z-10 container-x pb-16 w-full">
+    <div class="flex flex-wrap gap-3 mb-8 reveal reveal-delay-1 in-view">
+      <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs text-white/80 backdrop-blur-sm">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+        1:1 Private Routing
+      </span>
+      <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs text-white/80 backdrop-blur-sm">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>
+        Exclusivity Per Vertical
+      </span>
+      <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs text-white/80 backdrop-blur-sm">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="2"><path d="M4 7l8-4 8 4v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7z"/></svg>
+        Dual-Layer Validation
+      </span>
+    </div>
+
+    <h1 class="reveal reveal-delay-2 in-view font-satoshi font-bold text-white text-5xl md:text-7xl leading-[1.05] tracking-tight max-w-3xl">
+      We Route Access<br>
+      Engineered for Business Growth<br>
+      &amp; <span class="accent">Scaling Tactically.</span>
+    </h1>
+
+    <p class="reveal reveal-delay-3 in-view mt-6 text-white/70 text-base md:text-lg max-w-lg leading-relaxed">
+      We route qualified access to decision-makers, capital, and strategic partners — engineered around timing, fit, and signal, not volume.
+    </p>
+
+    <div class="reveal reveal-delay-3 in-view mt-8 flex flex-wrap gap-4">
+      <a href="#cta" class="glow-btn inline-flex items-center gap-2 rounded-full bg-white text-black font-satoshi font-semibold text-sm px-6 py-3.5 hover:bg-white/90 transition">
+        <span class="glow-orb"></span>
+        <span>See if you qualify</span>
+      </a>
+      <a href="#howitworks" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 text-white font-satoshi font-semibold text-sm px-6 py-3.5 hover:bg-white/10 transition backdrop-blur-sm">
+        How It Works
+      </a>
+    </div>
+
+    <div class="reveal reveal-delay-4 in-view mt-16 pt-6 border-t border-white/10">
+      <p class="text-[11px] uppercase tracking-[0.2em] text-white/40 mb-4">Trusted by growing companies</p>
+      <div class="flex flex-wrap items-center gap-x-10 gap-y-3 opacity-70">
+        <span class="font-semibold text-white/60 text-sm tracking-wide">VENTION</span>
+        <span class="font-semibold text-white/60 text-sm tracking-wide">CONNECT GROUP</span>
+        <span class="font-semibold text-white/60 text-sm tracking-wide">FORPLAYERS</span>
+        <span class="font-semibold text-white/60 text-sm tracking-wide">FABULINGUA</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PROOF BAR ========== -->
+<section class="border-y border-white/10 bg-bg-dark py-10" id="proof">
+  <div class="marquee-viewport">
+    <div class="marquee-track">
+      <!-- set 1 -->
+      <div class="flex shrink-0">
+        <div class="px-10 text-center min-w-[220px]">
+          <div class="font-satoshi font-bold text-white text-3xl md:text-4xl">$340M+</div>
+          <div class="text-xs text-faint mt-2">in B2B deals routed</div>
+        </div>
+        <div class="px-10 text-center min-w-[220px] border-l border-white/10">
+          <div class="font-satoshi font-bold text-white text-3xl md:text-4xl">94%</div>
+          <div class="text-xs text-faint mt-2">intro-to-conversation rate</div>
+        </div>
+        <div class="px-10 text-center min-w-[220px] border-l border-white/10">
+          <div class="font-satoshi font-bold text-white text-3xl md:text-4xl">12 days</div>
+          <div class="text-xs text-faint mt-2">avg. time to first qualified conversation</div>
+        </div>
+        <div class="px-10 text-center min-w-[220px] border-l border-white/10">
+          <div class="font-satoshi font-bold text-white text-3xl md:text-4xl">100+</div>
+          <div class="text-xs text-faint mt-2">companies introduced last 18 months</div>
+        </div>
+        <div class="px-10 text-center min-w-[220px] border-l border-white/10">
+          <div class="font-satoshi font-bold text-white text-3xl md:text-4xl">Zero.</div>
+          <div class="text-xs text-faint mt-2">cold email campaigns. Ever.</div>
+        </div>
+      </div>
+      <!-- set 2 (duplicate for seamless loop) -->
+      <div class="flex shrink-0">
+        <div class="px-10 text-center min-w-[220px] border-l border-white/10">
+          <div class="font-satoshi font-bold text-white text-3xl md:text-4xl">$340M+</div>
+          <div class="text-xs text-faint mt-2">in B2B deals routed</div>
+        </div>
+        <div class="px-10 text-center min-w-[220px] border-l border-white/10">
+          <div class="font-satoshi font-bold text-white text-3xl md:text-4xl">94%</div>
+          <div class="text-xs text-faint mt-2">intro-to-conversation rate</div>
+        </div>
+        <div class="px-10 text-center min-w-[220px] border-l border-white/10">
+          <div class="font-satoshi font-bold text-white text-3xl md:text-4xl">12 days</div>
+          <div class="text-xs text-faint mt-2">avg. time to first qualified conversation</div>
+        </div>
+        <div class="px-10 text-center min-w-[220px] border-l border-white/10">
+          <div class="font-satoshi font-bold text-white text-3xl md:text-4xl">100+</div>
+          <div class="text-xs text-faint mt-2">companies introduced last 18 months</div>
+        </div>
+        <div class="px-10 text-center min-w-[220px] border-l border-white/10">
+          <div class="font-satoshi font-bold text-white text-3xl md:text-4xl">Zero.</div>
+          <div class="text-xs text-faint mt-2">cold email campaigns. Ever.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PROBLEM ========== -->
+<section class="py-24 md:py-32" id="problem">
+  <div class="container-x">
+    <span class="reveal in-view block text-xs uppercase tracking-[0.2em] text-teal font-semibold mb-4">The real issue</span>
+    <h2 class="reveal reveal-delay-1 in-view font-satoshi font-bold text-white text-4xl md:text-5xl leading-tight max-w-2xl">
+      Your pipeline isn't broken.<br>
+      It's talking to the <span class="accent">wrong people.</span>
+    </h2>
+    <div class="grid md:grid-cols-2 gap-10 mt-12">
+      <div class="reveal reveal-delay-2 in-view space-y-5 text-white/70 leading-relaxed">
+        <p>Most companies don't have a leads problem. They have a signal problem.</p>
+        <p>They're spending money on outreach that never lands. Running ads into a market that isn't listening. Paying for appointments that go nowhere, with people who were never going to buy.</p>
+        <p>The motion is there. The demand exists. It just isn't routing through them.</p>
+        <p>That's not a sales problem. That's a positioning and access problem. And you don't fix access with more volume.</p>
+      </div>
+      <div class="reveal reveal-delay-3 in-view relative overflow-hidden rounded-2xl bg-bg-card border border-white/10 p-8">
+        <div class="card-orb"></div>
+        <div class="card-orb-overlay"></div>
+        <p class="relative text-white text-lg leading-relaxed">"We put the right people in the same room — when timing is clean and both sides already know why they're there."</p>
+        <p class="relative text-faint text-sm mt-4">— The Tactical Scaling AI Model</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== WHAT WE DO ========== -->
+<section class="py-24 md:py-32 border-t border-white/10" id="whatwedo">
+  <div class="container-x grid md:grid-cols-2 gap-10">
+    <div class="reveal reveal-delay-1 in-view">
+      <span class="block text-xs uppercase tracking-[0.2em] text-teal font-semibold mb-4">What actually happens</span>
+      <h2 class="font-satoshi font-bold text-white text-4xl md:text-5xl leading-tight">
+        We don't run campaigns.<br>
+        We <span class="accent">route demand.</span>
+      </h2>
+    </div>
+    <div class="reveal reveal-delay-2 in-view space-y-5 text-white/70 leading-relaxed">
+      <p>Tactical Scaling AI sits at the intersection of two sides: businesses with a specific need, and companies that solve exactly that need.</p>
+      <p>We've spent years mapping who's actually looking, when their timing is clean, and what kind of introduction they'll actually respond to.</p>
+      <p>When the signal is right, we make the intro. One conversation. The right room.</p>
+      <div class="h-px bg-white/10 my-6"></div>
+      <p class="text-white font-medium">You don't get a funnel. You get access to motion that was already building.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== HOW IT RUNS ========== -->
+<section class="py-24 md:py-32 border-t border-white/10" id="howitworks">
+  <div class="container-x">
+    <span class="reveal in-view block text-xs uppercase tracking-[0.2em] text-teal font-semibold mb-4">The sequence</span>
+    <h2 class="reveal reveal-delay-1 in-view font-satoshi font-bold text-white text-4xl md:text-5xl leading-tight">
+      Three things happen.<br>
+      In this order.
+    </h2>
+    <div class="grid md:grid-cols-3 gap-6 mt-12">
+      <div class="reveal reveal-delay-2 in-view relative overflow-hidden rounded-2xl bg-bg-card border border-white/10 p-8">
+        <div class="card-orb"></div>
+        <div class="card-orb-overlay"></div>
+        <div class="relative text-faint text-5xl font-satoshi font-bold opacity-30">01</div>
+        <h3 class="relative text-white font-semibold text-xl mt-4">We read the signal</h3>
+        <p class="relative text-white/60 text-sm leading-relaxed mt-3">Before anyone gets introduced to anyone, we watch for active demand — companies showing real intent, real urgency, real budget. Not guesses. <strong class="text-white">We only move when the signal is already there.</strong></p>
+      </div>
+      <div class="reveal reveal-delay-3 in-view relative overflow-hidden rounded-2xl bg-bg-card border border-white/10 p-8">
+        <div class="card-orb"></div>
+        <div class="card-orb-overlay"></div>
+        <div class="relative flex items-start justify-between">
+          <div class="text-faint text-5xl font-satoshi font-bold opacity-30">02</div>
+          <span class="mt-2 text-[10px] uppercase tracking-widest bg-teal/15 text-teal px-2.5 py-1 rounded-full">You are here</span>
+        </div>
+        <h3 class="relative text-white font-semibold text-xl mt-4">We route and qualify</h3>
+        <p class="relative text-white/60 text-sm leading-relaxed mt-3">Once the signal is confirmed, we match it against the right supply side — filtering for fit, timing, and readiness on both ends. <strong class="text-white">Nothing moves forward until alignment is clean.</strong></p>
+      </div>
+      <div class="reveal reveal-delay-4 in-view relative overflow-hidden rounded-2xl bg-bg-card border border-white/10 p-8">
+        <div class="card-orb"></div>
+        <div class="card-orb-overlay"></div>
+        <div class="relative text-faint text-5xl font-satoshi font-bold opacity-30">03</div>
+        <h3 class="relative text-white font-semibold text-xl mt-4">We make the connection</h3>
+        <p class="relative text-white/60 text-sm leading-relaxed mt-3">Not a referral. A controlled introduction with context, framing, and a reason to continue. <strong class="text-white">The conversation lands warm because both sides already know why they're in the room.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CASE STUDIES ========== -->
+<section class="py-24 md:py-32 border-t border-white/10" id="cases">
+  <div class="container-x">
+    <span class="reveal in-view block text-xs uppercase tracking-[0.2em] text-teal font-semibold mb-4">Motion on record</span>
+    <h2 class="reveal reveal-delay-1 in-view font-satoshi font-bold text-white text-4xl md:text-5xl leading-tight">
+      When the room is right,<br>
+      things start <span class="accent">moving fast.</span>
+    </h2>
+    <div class="grid md:grid-cols-2 gap-6 mt-12">
+      <div class="reveal reveal-delay-2 in-view relative overflow-hidden rounded-2xl bg-bg-card border border-white/10 p-8">
+        <div class="card-orb"></div>
+        <div class="card-orb-overlay"></div>
+        <div class="relative flex items-center justify-between text-xs text-faint uppercase tracking-wide">
+          <span>Industrial Automation</span>
+          <span class="text-white/70">Vention</span>
+        </div>
+        <div class="relative font-satoshi font-bold text-white text-4xl mt-4">$85K</div>
+        <p class="relative text-white/70 text-sm mt-2">in new revenue routed to their pipeline</p>
+        <p class="relative text-faint text-xs mt-1">60 days from first intro</p>
+        <p class="relative text-white/60 text-sm italic mt-4 border-t border-white/10 pt-4">"The conversations were already warm by the time they landed. We didn't have to sell — we just had to show up."</p>
+      </div>
+      <div class="reveal reveal-delay-3 in-view relative overflow-hidden rounded-2xl bg-bg-card border border-white/10 p-8">
+        <div class="card-orb"></div>
+        <div class="card-orb-overlay"></div>
+        <div class="relative flex items-center justify-between text-xs text-faint uppercase tracking-wide">
+          <span>Recruitment</span>
+          <span class="text-white/70">Connect Group</span>
+        </div>
+        <div class="relative font-satoshi font-bold text-white text-4xl mt-4">$105K</div>
+        <p class="relative text-white/70 text-sm mt-2">added in a single quarter through new intros</p>
+        <p class="relative text-faint text-xs mt-1">One quarter. Clean motion.</p>
+        <p class="relative text-white/60 text-sm italic mt-4 border-t border-white/10 pt-4">"We'd been running the same outreach for months. One properly routed intro changed what the quarter looked like."</p>
+      </div>
+      <div class="reveal reveal-delay-2 in-view relative overflow-hidden rounded-2xl bg-bg-card border border-white/10 p-8">
+        <div class="card-orb"></div>
+        <div class="card-orb-overlay"></div>
+        <div class="relative flex items-center justify-between text-xs text-faint uppercase tracking-wide">
+          <span>E-Sports</span>
+          <span class="text-white/70">ForPlayers</span>
+        </div>
+        <div class="relative font-satoshi font-bold text-white text-4xl mt-4">€70K</div>
+        <p class="relative text-white/70 text-sm mt-2">in new revenue, a market they couldn't crack on their own</p>
+        <p class="relative text-faint text-xs mt-1">3 months after access opened</p>
+        <p class="relative text-white/60 text-sm italic mt-4 border-t border-white/10 pt-4">"The door was already there. We just didn't know who was holding it."</p>
+      </div>
+      <div class="reveal reveal-delay-3 in-view relative overflow-hidden rounded-2xl bg-bg-card border border-white/10 p-8">
+        <div class="card-orb"></div>
+        <div class="card-orb-overlay"></div>
+        <div class="relative flex items-center justify-between text-xs text-faint uppercase tracking-wide">
+          <span>SaaS</span>
+          <span class="text-white/70">FabuLingua</span>
+        </div>
+        <div class="relative font-satoshi font-bold text-white text-4xl mt-4">5 clients</div>
+        <p class="relative text-white/70 text-sm mt-2">closed from a standing start, no prior traction in the segment</p>
+        <p class="relative text-faint text-xs mt-1">48 days</p>
+        <p class="relative text-white/60 text-sm italic mt-4 border-t border-white/10 pt-4">"We had the product. We were missing the path. That changed quickly once the right intros were in motion."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== WHO IT'S FOR ========== -->
+<section class="py-24 md:py-32 border-t border-white/10" id="whoisfor">
+  <div class="container-x grid md:grid-cols-2 gap-10">
+    <div class="reveal reveal-delay-1 in-view">
+      <span class="block text-xs uppercase tracking-[0.2em] text-teal font-semibold mb-4">Right conditions</span>
+      <h2 class="font-satoshi font-bold text-white text-4xl md:text-5xl leading-tight">
+        This runs best under<br>
+        <span class="accent">specific conditions.</span>
+      </h2>
+      <ul class="mt-8 space-y-4">
+        <li class="flex gap-3 text-white/70 text-sm leading-relaxed"><span class="text-teal mt-1">—</span>One right conversation is worth serious money to you</li>
+        <li class="flex gap-3 text-white/70 text-sm leading-relaxed"><span class="text-teal mt-1">—</span>Your offer is proven. You've closed before. You know what works.</li>
+        <li class="flex gap-3 text-white/70 text-sm leading-relaxed"><span class="text-teal mt-1">—</span>You're not looking for volume. You're looking for the right door.</li>
+        <li class="flex gap-3 text-white/70 text-sm leading-relaxed"><span class="text-teal mt-1">—</span>Your team can handle the conversation once it starts</li>
+        <li class="flex gap-3 text-white/70 text-sm leading-relaxed"><span class="text-teal mt-1">—</span>You've tried the standard routes. The motion stalled.</li>
+      </ul>
+    </div>
+    <div class="reveal reveal-delay-2 in-view space-y-6">
+      <div class="relative overflow-hidden rounded-2xl bg-bg-card border border-white/10 p-8">
+        <div class="card-orb"></div>
+        <div class="card-orb-overlay"></div>
+        <p class="relative text-white/80 text-sm leading-relaxed"><strong class="text-white">If you're still validating your offer, this isn't the right moment.</strong> Come back when the pattern is clear.</p>
+        <p class="relative text-white/60 text-sm leading-relaxed mt-3">The model only works when the fit is tight on both sides. We'd rather route fewer introductions that land than run volume that doesn't.</p>
+      </div>
+      <div class="relative overflow-hidden rounded-2xl bg-bg-elevated border border-teal/20 p-8">
+        <div class="card-orb"></div>
+        <div class="card-orb-overlay"></div>
+        <h4 class="relative text-white font-semibold text-sm uppercase tracking-wide mb-4">This is for companies where</h4>
+        <ul class="relative space-y-3">
+          <li class="flex gap-3 text-white/70 text-sm leading-relaxed"><span class="text-teal mt-1">✓</span>The deal size makes the wrong intro expensive</li>
+          <li class="flex gap-3 text-white/70 text-sm leading-relaxed"><span class="text-teal mt-1">✓</span>One conversation can move six figures</li>
+          <li class="flex gap-3 text-white/70 text-sm leading-relaxed"><span class="text-teal mt-1">✓</span>The room matters more than the campaign</li>
+          <li class="flex gap-3 text-white/70 text-sm leading-relaxed"><span class="text-teal mt-1">✓</span>The next right intro could change the quarter</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== WHY US / DIFFERENCE ========== -->
+<section class="py-24 md:py-32 border-t border-white/10" id="why">
+  <div class="container-x">
+    <span class="reveal in-view block text-xs uppercase tracking-[0.2em] text-teal font-semibold mb-4">The difference</span>
+    <h2 class="reveal reveal-delay-1 in-view font-satoshi font-bold text-white text-4xl md:text-5xl leading-tight">
+      No shortage of people<br>
+      promising pipeline.<br>
+      <span class="accent">Here's what's different.</span>
+    </h2>
+
+    <div class="reveal reveal-delay-2 in-view mt-12 rounded-2xl border border-white/10 overflow-hidden">
+      <div class="grid grid-cols-2">
+        <div class="px-6 py-4 text-xs uppercase tracking-wide text-faint bg-bg-card border-b border-white/10">Standard pipeline services</div>
+        <div class="px-6 py-4 text-xs uppercase tracking-wide text-teal font-semibold bg-bg-card border-b border-white/10 border-l border-white/10">Tactical Scaling AI</div>
+
+        <div class="px-6 py-5 text-sm text-white/50 border-b border-white/10">Supply-side by design</div>
+        <div class="px-6 py-5 text-sm text-white border-b border-white/10 border-l border-white/10">Demand-side by design</div>
+
+        <div class="px-6 py-5 text-sm text-white/50 border-b border-white/10">Put your offer in front of whoever's reachable</div>
+        <div class="px-6 py-5 text-sm text-white border-b border-white/10 border-l border-white/10">Works backwards from who's actually looking</div>
+
+        <div class="px-6 py-5 text-sm text-white/50 border-b border-white/10">Call it demand generation</div>
+        <div class="px-6 py-5 text-sm text-white border-b border-white/10 border-l border-white/10">Moves when timing is clean</div>
+
+        <div class="px-6 py-5 text-sm text-white/50 border-b border-white/10">More activity, mixed outcomes</div>
+        <div class="px-6 py-5 text-sm text-white border-b border-white/10 border-l border-white/10">Fewer conversations. Better outcomes.</div>
+
+        <div class="px-6 py-5 text-sm text-white/50">You're a client</div>
+        <div class="px-6 py-5 text-sm text-white border-l border-white/10">You're a fit, or you're not</div>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-3 in-view mt-10 space-y-3 max-w-2xl text-white/70 text-sm leading-relaxed">
+      <p>We don't open this to everyone. The model only works when the fit is tight on both sides.</p>
+      <p>That's not a pitch. <strong class="text-white">That's how the pattern repeats.</strong></p>
+    </div>
+
+    <blockquote class="reveal reveal-delay-4 in-view mt-10 border-l-2 border-teal pl-6 text-white/80 text-lg italic max-w-2xl">
+      "We control the flow end-to-end. Both sides move with clarity because we've already mapped where this goes before the intro happens."
+    </blockquote>
+  </div>
+</section>
+
+<!-- ========== PARTNER LINE ========== -->
+<section class="py-14 border-t border-white/10" id="partner">
+  <div class="container-x">
+    <div class="reveal in-view flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+      <span class="text-xs uppercase tracking-[0.2em] text-teal font-semibold shrink-0">Vetted network</span>
+      <div class="hidden md:block w-px h-6 bg-white/15"></div>
+      <p class="text-white/50 text-sm leading-relaxed">These outcomes ran through Tactical Scaling AI's ecosystem, which includes operators like <strong class="text-white/80">myoProcess</strong> — selected for track record, not availability.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CTA ========== -->
+<section class="py-24 md:py-32 border-t border-white/10 text-center" id="cta">
+  <div class="container-x flex flex-col items-center">
+    <p class="reveal in-view text-xs uppercase tracking-[0.2em] text-teal font-semibold mb-4">When the signal is there</p>
+    <h2 class="reveal reveal-delay-1 in-view font-satoshi font-bold text-white text-4xl md:text-6xl leading-tight max-w-2xl">
+      If the timing is right,<br>
+      this moves fast.
+    </h2>
+    <p class="reveal reveal-delay-2 in-view mt-6 text-white/60 max-w-lg leading-relaxed">
+      We take a small number of new companies each quarter. Not because of artificial scarcity. Because the quality of what we route depends on who we route it through.
+    </p>
+    <div class="reveal reveal-delay-3 in-view mt-8">
+      <a href="mailto:hello@tacticalscalingai.com" class="glow-btn inline-flex items-center gap-2 rounded-full bg-white text-black font-satoshi font-semibold text-sm px-8 py-4 hover:bg-white/90 transition">
+        <span class="glow-orb"></span>
+        <span>See if you qualify</span>
+      </a>
+      <p class="text-faint text-xs mt-4 max-w-xs mx-auto">No deck. No proposal. A short conversation to see if there's something worth routing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="border-t border-white/10 py-10" id="footer">
+  <div class="container-x flex flex-col md:flex-row items-center justify-between gap-6">
+    <a href="#hero" class="font-satoshi font-bold text-white text-base tracking-tight">
+      Tactical Scaling <span class="accent text-lg">AI</span>
+    </a>
+    <a href="mailto:hello@tacticalscalingai.com" class="text-white/50 text-sm hover:text-white transition">hello@tacticalscalingai.com</a>
+    <div class="flex items-center gap-6 text-xs text-faint">
+      <a href="#" class="hover:text-white/70 transition">Terms &amp; Conditions</a>
+      <a href="#" class="hover:text-white/70 transition">Privacy Policy</a>
+      <span>&copy; 2026 Tactical Scaling AI.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach((el) => {
+    el.classList.remove('in-view');
+    io.observe(el);
+  });
+</script>
+
+</body>
+</html>
